@@ -21,8 +21,9 @@ public class Game {
 
         moverIndex = 0;
         mover = players.get(moverIndex);
+
         field = new GameField(players);
-        convertedField = Utils.copyGameFieldToArr(field);
+        convertedField = Utils.copyGameField(field);
 
         this.players = players;
 
@@ -42,18 +43,18 @@ public class Game {
             if (field.getCellColor(startMovePoint.y, startMovePoint.x) == mover.getPlayerColor()) {
                 Point endMovePoint = Utils.convertToGamePoint(endRowIndex, endColIndex);
 
-                System.out.println(startMovePoint);
-                System.out.println(endMovePoint);
                 if (field.isPointOfGameField(endMovePoint.y, endMovePoint.x)) {
                     if (isNullPointNearby(startMovePoint, endMovePoint)) {
                         swapCells(startMovePoint, endMovePoint, startRowIndex, startColIndex, endRowIndex, endColIndex);
                         wasJump = true;
                         endMove();
+
                         return true;
                     }
 
                     if (isNullPointAfterJump(startMovePoint, endMovePoint)) {
                         swapCells(startMovePoint, endMovePoint, startRowIndex, startColIndex, endRowIndex, endColIndex);
+
                         return true;
                     }
                 }

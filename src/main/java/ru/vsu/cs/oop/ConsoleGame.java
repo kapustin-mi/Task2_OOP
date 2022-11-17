@@ -53,8 +53,7 @@ public class ConsoleGame {
     private static boolean makeMove(Game game) {
         String move = readMove();
         if (move.equals("end")) {
-            game.endMove();
-            return true;
+            return game.endMove();
         }
 
         try {

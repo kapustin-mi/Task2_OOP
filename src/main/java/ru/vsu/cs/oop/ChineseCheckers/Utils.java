@@ -40,7 +40,7 @@ class Utils {
         return new Point(gameColIndex, rowIndex);
     }
 
-    public static Cell[][] copyGameFieldToArr(GameField field) {
+    public static Cell[][] copyGameField(GameField field) {
         Cell[][] matrix = createMatrix();
 
         Point curPoint;
