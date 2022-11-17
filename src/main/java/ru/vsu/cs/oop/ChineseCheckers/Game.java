@@ -37,26 +37,24 @@ public class Game {
     }
 
     public boolean makeMove(int startRowIndex, int startColIndex, int endRowIndex, int endColIndex) {
-        Point startMovePoint = Utils.convertToGamePoint(startRowIndex, startColIndex);
+        if (isValidPoint(startRowIndex, startColIndex) && isValidPoint(endRowIndex, endColIndex)) {
+            Point startMovePoint = Utils.convertToGamePoint(startRowIndex, startColIndex);
 
-        if (field.isPointOfGameField(startMovePoint.y, startMovePoint.x)) {
             if (field.getCellColor(startMovePoint.y, startMovePoint.x) == mover.getPlayerColor()) {
                 Point endMovePoint = Utils.convertToGamePoint(endRowIndex, endColIndex);
 
-                if (field.isPointOfGameField(endMovePoint.y, endMovePoint.x)) {
-                    if (isNullPointNearby(startMovePoint, endMovePoint)) {
-                        swapCells(startMovePoint, endMovePoint, startRowIndex, startColIndex, endRowIndex, endColIndex);
-                        wasJump = true;
-                        endMove();
+                if (isNullPointNearby(startMovePoint, endMovePoint)) {
+                    swapCells(startMovePoint, endMovePoint, startRowIndex, startColIndex, endRowIndex, endColIndex);
+                    wasJump = true;
+                    endMove();
 
-                        return true;
-                    }
+                    return true;
+                }
 
-                    if (isNullPointAfterJump(startMovePoint, endMovePoint)) {
-                        swapCells(startMovePoint, endMovePoint, startRowIndex, startColIndex, endRowIndex, endColIndex);
+                if (isNullPointAfterJump(startMovePoint, endMovePoint)) {
+                    swapCells(startMovePoint, endMovePoint, startRowIndex, startColIndex, endRowIndex, endColIndex);
 
-                        return true;
-                    }
+                    return true;
                 }
             }
         }
@@ -122,6 +120,10 @@ public class Game {
         }
 
         return false;
+    }
+
+    private boolean isValidPoint(int r, int c) {
+        return r >= 0 && r < convertedField.length && c >= 0 && c < convertedField[r].length;
     }
 
     public boolean isGameEnd() {

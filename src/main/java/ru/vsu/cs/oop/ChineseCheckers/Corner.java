@@ -6,5 +6,5 @@ enum Corner {
     LOWER_LEFT,
     LOWER_RIGHT,
     UPPER_RIGHT,
-    UPPER_LEFT;
+    UPPER_LEFT
 }

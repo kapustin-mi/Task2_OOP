@@ -127,10 +127,6 @@ class GameField {
         }
     }
 
-    public boolean isPointOfGameField(int rowIndex, int colIndex) {
-        return rowIndex < field.length && rowIndex >= 0 && colIndex < field[0].length && colIndex >= 0;
-    }
-
     public boolean isCornerFilled(Corner corner, Color color) {
         Point coordinates;
         switch (corner) {
