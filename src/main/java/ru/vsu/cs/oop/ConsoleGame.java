@@ -124,6 +124,10 @@ public class ConsoleGame {
     }
 
     private static void printWinner(Game game) {
-        System.out.println("Won : " + CONSOLE_COLORS.get(game.getWinner().getPlayerColor()) + "0.");
+        List<Player> winners = game.getWinners();
+
+        for (Player winner : winners) {
+            System.out.println("Won : " + CONSOLE_COLORS.get(winner.getPlayerColor()) + "0" + DEFAULT_COLOR);
+        }
     }
 }

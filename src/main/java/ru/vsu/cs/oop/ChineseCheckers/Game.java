@@ -1,16 +1,18 @@
 package ru.vsu.cs.oop.ChineseCheckers;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Game {
     private final List<Player> players;
+    private final List<Player> winners;
+    private final List<Integer> countOfPlayerMoves;
 
     private final GameField field;
     private final Cell[][] convertedField;
 
     private Player mover;
-    private Player winner;
 
     private int moverIndex;
 
@@ -26,6 +28,9 @@ public class Game {
         convertedField = Utils.copyGameField(field);
 
         this.players = players;
+        countOfPlayerMoves = initCount();
+
+        winners = new ArrayList<>();
 
         wasJump = false;
     }
@@ -34,6 +39,16 @@ public class Game {
         if (numberOfPlayers < 2 || numberOfPlayers == 5 || numberOfPlayers > 6) {
             throw new IllegalArgumentException("Error. The number of players can be 2, 3, 4 and 6.");
         }
+    }
+
+    private List<Integer> initCount() {
+        List<Integer> moves = new ArrayList<>();
+
+        for (int i = 0; i < players.size(); i++) {
+            moves.add(0);
+        }
+
+        return moves;
     }
 
     public boolean makeMove(int startRowIndex, int startColIndex, int endRowIndex, int endColIndex) {
@@ -107,6 +122,8 @@ public class Game {
 
     public boolean endMove() {
         if (wasJump) {
+            countOfPlayerMoves.set(moverIndex, countOfPlayerMoves.get(moverIndex) + 1);
+
             if (moverIndex == players.size() - 1) {
                 moverIndex = 0;
             } else {
@@ -129,11 +146,22 @@ public class Game {
     public boolean isGameEnd() {
         for (Player player : players) {
             if (field.isCornerFilled(player.getOppositeCorner(), player.playerColor)) {
-                winner = player;
+                winners.add(player);
             }
         }
 
-        return false;
+        return isSameNumberOfMoves() && winners.size() != 0;
+    }
+
+    private boolean isSameNumberOfMoves() {
+        int count = countOfPlayerMoves.get(0);
+        for (int i = 1; i < countOfPlayerMoves.size(); i++) {
+            if (countOfPlayerMoves.get(i) != count) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public Cell[][] getField() {
@@ -144,7 +172,7 @@ public class Game {
         return mover;
     }
 
-    public Player getWinner() {
-        return winner;
+    public List<Player> getWinners() {
+        return winners;
     }
 }
