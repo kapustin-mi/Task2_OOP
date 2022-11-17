@@ -16,7 +16,9 @@ public class Game {
 
     private int moverIndex;
 
-    private boolean wasJump;
+    private Point movablePoint;
+
+    private int curCountOfMoves;
 
     public Game(List<Player> players) {
         checkNumberOfPlayers(players.size());
@@ -32,7 +34,8 @@ public class Game {
 
         winners = new ArrayList<>();
 
-        wasJump = false;
+        movablePoint = null;
+        curCountOfMoves = 0;
     }
 
     private void checkNumberOfPlayers(int numberOfPlayers) {
@@ -60,16 +63,17 @@ public class Game {
 
                 if (isNullPointNearby(startMovePoint, endMovePoint)) {
                     swapCells(startMovePoint, endMovePoint, startRowIndex, startColIndex, endRowIndex, endColIndex);
-                    wasJump = true;
                     endMove();
 
                     return true;
                 }
 
-                if (isNullPointAfterJump(startMovePoint, endMovePoint)) {
-                    swapCells(startMovePoint, endMovePoint, startRowIndex, startColIndex, endRowIndex, endColIndex);
+                if (movablePoint == null || movablePoint.equals(startMovePoint)) {
+                    if (isNullPointAfterJump(startMovePoint, endMovePoint)) {
+                        swapCells(startMovePoint, endMovePoint, startRowIndex, startColIndex, endRowIndex, endColIndex);
 
-                    return true;
+                        return true;
+                    }
                 }
             }
         }
@@ -83,10 +87,12 @@ public class Game {
 
         convertedField[endR][endC].setCellColor(mover.getPlayerColor());
         convertedField[startR][startC].setCellColor(null);
+
+        curCountOfMoves++;
     }
 
     private boolean isNullPointNearby(Point startPoint, Point endPoint) {
-        return !wasJump && field.getCellColor(endPoint.y, endPoint.x) == null &&
+        return movablePoint == null && field.getCellColor(endPoint.y, endPoint.x) == null &&
                 Math.abs(startPoint.x - endPoint.x) <= 1 && Math.abs(startPoint.y - endPoint.y) <= 1;
     }
 
@@ -105,15 +111,12 @@ public class Game {
 
                     try {
                         if (field.getCellColor(pointBetween.y, pointBetween.x) != null) {
-                            wasJump = true;
+                            movablePoint = endPoint;
                             return true;
                         }
                     } catch (NullPointerException e) {
                         return false;
                     }
-
-                default:
-                    return false;
             }
         }
 
@@ -121,7 +124,7 @@ public class Game {
     }
 
     public boolean endMove() {
-        if (wasJump) {
+        if (curCountOfMoves != 0) {
             countOfPlayerMoves.set(moverIndex, countOfPlayerMoves.get(moverIndex) + 1);
 
             if (moverIndex == players.size() - 1) {
@@ -131,8 +134,7 @@ public class Game {
             }
 
             mover = players.get(moverIndex);
-            wasJump = false;
-
+            movablePoint = null;
             return true;
         }
 

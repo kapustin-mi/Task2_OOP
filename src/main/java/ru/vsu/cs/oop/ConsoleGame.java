@@ -42,7 +42,7 @@ public class ConsoleGame {
             if (makeMove(game)) {
                 printField(game, field);
             } else {
-                System.out.println("Repeat move.");
+                System.out.println("An error has occurred. Repeat move.");
             }
         }
 
